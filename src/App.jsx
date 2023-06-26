@@ -2,35 +2,53 @@ import "./App.css";
 import { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
+  // const [users, setUsers] = useState([]);
+  // const [error, setError] = useState("");
+  const [fetchUsers, setFetchUsers] = useState({
+    loading: false,
+    users: [],
+    error: "",
+  });
   useEffect(() => {
     // loading
-    setLoading(true);
+    setFetchUsers((prev) => {
+      return {
+        ...prev,
+        loading: true,
+      };
+    });
     axios
       .get("https://jsonplaceholder.typicode.com/users")
       .then((res) => {
         // get users / loading = false
-        setLoading(false);
-        setUsers(res.data);
-        setError("");
+        setFetchUsers((prev) => {
+          return {
+            loading: false,
+            users: res.data,
+            error: "",
+          };
+        });
       })
       .catch((error) => {
         // error / loading = fasle
-        setLoading(false);
-        setError(error.message);
-        setUsers([]);
+        setFetchUsers((prev) => {
+          return {
+            loading: false,
+            users: [],
+            error: error.message,
+          };
+        });
       });
   }, []);
   return (
     <div>
       <h1>Hello App</h1>
-      {loading && <h2>Loading...</h2>}
-      {error && <p>Error : {error}</p>}
-      {!loading && !error && users?.length ? (
+      {fetchUsers.loading && <h2>Loading...</h2>}
+      {fetchUsers.error && <p>Error : </p>}
+      {!fetchUsers.loading && !fetchUsers.error && fetchUsers.users?.length ? (
         <ul>
-          {users.map((user) => (
+          {fetchUsers.users.map((user) => (
             <li key={user.id}>{user.name}</li>
           ))}
         </ul>
