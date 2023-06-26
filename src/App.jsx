@@ -1,57 +1,29 @@
 import "./App.css";
-import { Fragment, useState } from "react";
-import Form from "./components/Form";
-import Product from "./components/product/Product";
-import { styled } from "styled-components";
+import { Fragment, useEffect, useState } from "react";
 function App() {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "apple",
-      desc: "this is an apple",
-      rate: 4,
-      price: 12,
-      img: "product.jpg",
-    },
-    {
-      id: 2,
-      name: "orange",
-      desc: "this is a orange",
-      rate: 3,
-      price: 15,
-      img: "product.jpg",
-    },
-    {
-      id: 3,
-      name: "banana",
-      desc: "this is a banana",
-      rate: 2,
-      price: 20,
-      img: "product.jpg",
-    },
-  ]);
-  const test = 2;
+  const [resourceType, setResourceType] = useState("users");
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
+      .then((res) => res.json())
+      .then((data) => setItems(data));
+  }, [resourceType]);
+
   return (
-    <Fragment>
-      <Form />
-      <Grid>
-        {items.map(({ name, desc, price, rate, id, img }) => (
-          <Product
-            key={id}
-            name={name}
-            desc={desc}
-            rate={rate}
-            price={price}
-            img={img}
-          />
+    <div>
+      <div>
+        <button onClick={() => setResourceType("posts")}>Posts</button>
+        <button onClick={() => setResourceType("users")}>Users</button>
+        <button onClick={() => setResourceType("comments")}>Comments</button>
+      </div>
+      <h1>{resourceType}</h1>
+      <div style={{ width: "500px", height: "500px" }}>
+        {items.map((item) => (
+          <pre>{JSON.stringify(item)}</pre>
         ))}
-      </Grid>
-    </Fragment>
+      </div>
+    </div>
   );
 }
-const Grid = styled.div`
-  display: flex;
-  color: ${(props) => (props.test === 1 ? "red" : "black")};
-`;
 
 export default App;
