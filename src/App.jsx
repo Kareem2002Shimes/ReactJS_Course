@@ -1,27 +1,40 @@
 import "./App.css";
 import { Fragment, useEffect, useState } from "react";
+import axios from "axios";
 function App() {
-  const [resourceType, setResourceType] = useState("users");
-  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState("");
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
-      .then((res) => res.json())
-      .then((data) => setItems(data));
-  }, [resourceType]);
-
+    // loading
+    setLoading(true);
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((res) => {
+        // get users / loading = false
+        setLoading(false);
+        setUsers(res.data);
+        setError("");
+      })
+      .catch((error) => {
+        // error / loading = fasle
+        setLoading(false);
+        setError(error.message);
+        setUsers([]);
+      });
+  }, []);
   return (
     <div>
-      <div>
-        <button onClick={() => setResourceType("posts")}>Posts</button>
-        <button onClick={() => setResourceType("users")}>Users</button>
-        <button onClick={() => setResourceType("comments")}>Comments</button>
-      </div>
-      <h1>{resourceType}</h1>
-      <div style={{ width: "500px", height: "500px" }}>
-        {items.map((item) => (
-          <pre>{JSON.stringify(item)}</pre>
-        ))}
-      </div>
+      <h1>Hello App</h1>
+      {loading && <h2>Loading...</h2>}
+      {error && <p>Error : {error}</p>}
+      {!loading && !error && users?.length ? (
+        <ul>
+          {users.map((user) => (
+            <li key={user.id}>{user.name}</li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
