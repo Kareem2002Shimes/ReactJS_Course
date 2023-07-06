@@ -1,14 +1,15 @@
 import { useContext } from "react";
-import { ChannelContext, UserContext } from "../App";
+import { CountContext } from "../App";
+
 function ComponentC() {
-  const userData = useContext(UserContext);
-  const channelData = useContext(ChannelContext);
+  const data = useContext(CountContext);
   return (
     <div>
-      <h1>
-        Hello {userData.username} My Job is {userData.position}
-        Channel is {channelData}
-      </h1>
+      <h1>ComponentC</h1>
+      <h1>Count - {data.count}</h1>
+      <button onClick={() => data.setCount((prev) => prev + 1)}>
+        Increment
+      </button>
     </div>
   );
 }

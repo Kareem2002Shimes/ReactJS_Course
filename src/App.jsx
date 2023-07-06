@@ -1,63 +1,61 @@
+import axios from "axios";
 import { useState } from "react";
+import { useEffect } from "react";
 import { useReducer } from "react";
 
 const initialState = {
-  firstCount: 0,
-  secoundCount: 2,
+  loading: false,
+  users: [],
+  error: "",
 };
 const reducer = (state, action) => {
   switch (action.type) {
-    case "increment":
+    case "FETCH_PENDING":
       return {
-        firstCount: state.firstCount + action.payload,
-        secoundCount: state.secoundCount + action.payload,
+        ...state,
+        loading: true,
       };
-    case "decrement":
+    case "FETCH_SUCCESS":
       return {
-        firstCount: state.firstCount - action.payload,
-        secoundCount: state.secoundCount - action.payload,
+        loading: false,
+        users: action.payload,
+        error: "",
       };
-    case "reset":
-      return initialState;
+    case "FETCH_ERROR":
+      return {
+        loading: false,
+        users: [],
+        error: action.payload,
+      };
     default:
-      return state;
+      state;
   }
 };
-
 function App() {
-  const [countOne, dispatch] = useReducer(reducer, initialState);
-  const [countTwo, dispatchCountTwo] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  useEffect(() => {
+    dispatch({ type: "FETCH_PENDING" }); // loading = true
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((res) => {
+        // users = res.data
+        dispatch({ type: "FETCH_SUCCESS", payload: res.data });
+      })
+      .catch((error) =>
+        dispatch({ type: "FETCH_ERROR", payload: error.message })
+      );
+  }, []);
   return (
     <div>
-      {/* Count One */}
-      <div>
-        <h1>Count One - {countOne.firstCount}</h1>
-        <button onClick={() => dispatch({ type: "increment", payload: 1 })}>
-          Increment
-        </button>
-        <button onClick={() => dispatch({ type: "decrement", payload: 1 })}>
-          Decrement
-        </button>
-        <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
-      </div>
-      {/* Count Two */}
-
-      <div>
-        <h1>Count Two - {countTwo.secoundCount}</h1>
-        <button
-          onClick={() => dispatchCountTwo({ type: "increment", payload: 2 })}
-        >
-          Increment
-        </button>
-        <button
-          onClick={() => dispatchCountTwo({ type: "decrement", payload: 2 })}
-        >
-          Decrement
-        </button>
-        <button onClick={() => dispatchCountTwo({ type: "reset" })}>
-          Reset
-        </button>
-      </div>
+      {state.loading && <h1>Loading...</h1>}
+      {!state.loading && state.error ? <h1>Error : {state.error}</h1> : null}
+      {!state.loading && !state.error && state.users?.length > 0 ? (
+        <ul>
+          {state.users.map((user) => (
+            <h1 key={user.id}>{user.name}</h1>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
