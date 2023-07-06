@@ -1,22 +1,27 @@
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useState } from "react";
+import Title from "./components/Title";
+import Count from "./components/Count";
+import Button from "./components/Button";
 
 function App() {
-  const [timer, setTimer] = useState(0);
-  const timerRef = useRef();
-  useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setTimer((prev) => prev + 1);
-    }, 1000);
-    return () => {
-      clearInterval(timerRef.current);
-    };
-  }, []);
+  const [age, setAge] = useState(24);
+  const [salary, setSalary] = useState(8000);
+
+  const incrementAge = useCallback(() => {
+    setAge(age + 1);
+  }, [age]);
+
+  const incrementSalary = useCallback(() => {
+    setSalary(salary + 1);
+  }, [salary]);
+
   return (
     <div>
-      <h1>Timer - {timer}</h1>
-      <button onClick={() => clearInterval(timerRef.current)}>
-        Clear Timer
-      </button>
+      <Title />
+      <Count text="Age" count={age} />
+      <Button handleClick={incrementAge}>Increment Age</Button>
+      <Count text="Salary" count={salary} />
+      <Button handleClick={incrementSalary}>Increment Salary</Button>
     </div>
   );
 }
