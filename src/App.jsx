@@ -1,27 +1,18 @@
-import { useCallback, useState } from "react";
-import Title from "./components/Title";
-import Count from "./components/Count";
-import Button from "./components/Button";
+import ErrorBoundary from "./components/ErrorBoundary";
+import ProductEx from "./components/ProductEx";
 
 function App() {
-  const [age, setAge] = useState(24);
-  const [salary, setSalary] = useState(8000);
-
-  const incrementAge = useCallback(() => {
-    setAge(age + 1);
-  }, [age]);
-
-  const incrementSalary = useCallback(() => {
-    setSalary(salary + 1);
-  }, [salary]);
-
   return (
     <div>
-      <Title />
-      <Count text="Age" count={age} />
-      <Button handleClick={incrementAge}>Increment Age</Button>
-      <Count text="Salary" count={salary} />
-      <Button handleClick={incrementSalary}>Increment Salary</Button>
+      <ErrorBoundary>
+        <ProductEx product="orange" />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <ProductEx product="banana" />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <ProductEx product="apple" />
+      </ErrorBoundary>
     </div>
   );
 }
