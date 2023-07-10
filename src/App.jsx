@@ -1,20 +1,23 @@
-import ErrorBoundary from "./components/ErrorBoundary";
-import ProductEx from "./components/ProductEx";
-
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  createRoutesFromElements,
+} from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
 function App() {
-  return (
-    <div>
-      <ErrorBoundary>
-        <ProductEx product="orange" />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <ProductEx product="banana" />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <ProductEx product="apple" />
-      </ErrorBoundary>
-    </div>
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={<h1>Not Found this Page</h1>} />
+      </>
+    )
   );
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
