@@ -2,6 +2,7 @@ export default function Footer() {
   return (
     <footer style={{ background: "#444" }}>
       <a href="#">Logo</a>
+      <h1>Footer .....</h1>
       <ul>
         <li>
           <a href="/home">Home</a>

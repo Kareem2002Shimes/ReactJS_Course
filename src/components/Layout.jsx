@@ -1,13 +1,14 @@
+import { AuthContextProvider } from "../context/Auth";
 import Footer from "./Footer";
 import Header from "./Header";
-
-function Layout({ children }) {
+import { Outlet } from "react-router-dom";
+function Layout() {
   return (
-    <>
+    <AuthContextProvider>
       <Header />
-      {children}
-      <Footer />
-    </>
+      <Outlet />
+      {/* <Footer /> */}
+    </AuthContextProvider>
   );
 }
 

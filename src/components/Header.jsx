@@ -1,21 +1,59 @@
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { styled } from "styled-components";
+import { useAuth } from "/src/context/Auth";
 export default function Header() {
+  const links = ["Home", "About Us", "Blog"];
+  const { user } = useAuth();
+  const navBarStyles = ({ isActive }) => {
+    return {
+      textDecoration: isActive ? "none" : "underline",
+      fontWeight: isActive ? "bold" : "normal",
+      color: isActive ? "red" : "black",
+    };
+  };
   return (
-    <header>
-      <a href="#">Logo</a>
-      <ul>
+    <HeaderEle>
+      <Link to="/">Logo</Link>
+      <Nav>
         <li>
-          <a href="/home">Home</a>
+          <NavLink to="/" style={navBarStyles}>
+            Home
+          </NavLink>
         </li>
         <li>
-          <a href="/about">About</a>
+          <NavLink to="/about" style={navBarStyles}>
+            About
+          </NavLink>
         </li>
         <li>
-          <a href="/blog">Blog</a>
+          <NavLink to="/products" style={navBarStyles}>
+            Products
+          </NavLink>
         </li>
         <li>
-          <a href="/contact">Contact</a>
+          <NavLink to="/profile" style={navBarStyles}>
+            Profile
+          </NavLink>
         </li>
-      </ul>
-    </header>
+        {!user && (
+          <li>
+            <NavLink to="/login" style={navBarStyles}>
+              Login
+            </NavLink>
+          </li>
+        )}
+      </Nav>
+    </HeaderEle>
   );
 }
+const HeaderEle = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const Nav = styled.ul`
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 15px;
+`;
